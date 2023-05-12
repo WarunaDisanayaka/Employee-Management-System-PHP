@@ -1,7 +1,50 @@
 <?php
-
 include "config/connection.php";
+include "config/sweetalert.php";
 
+session_start();
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Collect the form data
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    // Check if the email exists in the database
+    $sql = "SELECT * FROM employees WHERE email = '$email'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows == 1) {
+        // Verify the password
+        $row = $result->fetch_assoc();
+
+        if (password_verify($password, $row['password'])) {
+            // Login successful
+            $_SESSION['email'] = $row['email'];
+            $_SESSION['userid'] = $row['id'];
+
+            // Redirect to index page after successful login
+            // Redirect to index page after successful login
+            if ($row['role'] == 'emp') {
+                header('Location: emp/');
+            } else {
+                // Redirect back
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
+                exit;
+
+            }
+            exit;
+
+        } else {
+            // Incorrect password
+            $error_message = 'Invalid email or password';
+        }
+    } else {
+        // Email not found
+        $error_message = 'Invalid email or password';
+    }
+
+    $conn->close();
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -12,7 +55,8 @@ include "config/connection.php";
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="css/style.css">
+    
     <title>EMS</title>
   </head>
   <body>
@@ -27,21 +71,20 @@ include "config/connection.php";
             <div class="card-body p-5">
               <h2 class="text-uppercase text-center mb-5">Login to your account</h2>
 
-              <form>
-
-
+              <form action="index.php" method="POST">
                 <div class="form-outline mb-4">
-                  <input type="email" id="form3Example3cg" class="form-control form-control-lg" />
                   <label class="form-label" for="form3Example3cg">Your Email</label>
+                  <input type="email" name="email" id="form3Example3cg" class="form-control form-control-lg" />
                 </div>
 
                 <div class="form-outline mb-4">
-                  <input type="password" id="form3Example4cg" class="form-control form-control-lg" />
-                  <label class="form-label" for="form3Example4cg">Password</label>
+                <label class="form-label" for="form3Example4cg">Password</label>  
+                  <input type="password" name="password" id="form3Example4cg" class="form-control form-control-lg" />
+                  <span class="error"><?php echo $error_message; ?></span>
                 </div>
 
                 <div class="d-flex justify-content-center">
-                  <button type="button"
+                  <button type="submit"
                     class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Login</button>
                 </div>
 
