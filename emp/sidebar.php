@@ -11,14 +11,14 @@
 
 <!-- Nav Item - Charts -->
 <li class="nav-item">
-    <a class="nav-link" href="charts.php">
+    <a class="nav-link" href="requests.php">
     <i class="fas fa-envelope-open"></i>
         <span>Requests</span></a>
 </li>
 
 <!-- Nav Item - Tables -->
 <li class="nav-item">
-    <a class="nav-link" href="tables.php">
+    <a class="nav-link" href="mytasks.php">
     <i class="fas fa-tasks"></i>
         <span>Tasks</span></a>
 </li>

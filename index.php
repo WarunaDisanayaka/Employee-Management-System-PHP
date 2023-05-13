@@ -5,45 +5,48 @@ include "config/sweetalert.php";
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Collect the form data
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+  // Collect the form data
+  $email = $_POST['email'];
+  $password = $_POST['password'];
 
-    // Check if the email exists in the database
-    $sql = "SELECT * FROM employees WHERE email = '$email'";
-    $result = $conn->query($sql);
+  // Check if the email exists in the database
+  $sql = "SELECT * FROM employees WHERE email = '$email'";
+  $result = $conn->query($sql);
 
-    if ($result->num_rows == 1) {
-        // Verify the password
-        $row = $result->fetch_assoc();
+  if ($result->num_rows == 1) {
+    // Verify the password
+    $row = $result->fetch_assoc();
 
-        if (password_verify($password, $row['password'])) {
-            // Login successful
-            $_SESSION['email'] = $row['email'];
-            $_SESSION['userid'] = $row['id'];
+    if (password_verify($password, $row['password'])) {
+      // Login successful
+      $_SESSION['email'] = $row['email'];
+      $_SESSION['userid'] = $row['id'];
+      $_SESSION['username'] = $row['username'];
 
-            // Redirect to index page after successful login
-            // Redirect to index page after successful login
-            if ($row['role'] == 'emp') {
-                header('Location: emp/');
-            } else {
-                // Redirect back
-                header('Location: ' . $_SERVER['HTTP_REFERER']);
-                exit;
+      // Redirect to index page after successful login
+      // Redirect to index page after successful login
+      if ($row['role'] == 'emp') {
+        header('Location: emp/');
+      } else if ($row['role'] == 'empl') {
+        header('Location: empl/');
+      } else {
+        // Redirect back
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
 
-            }
-            exit;
+      }
+      exit;
 
-        } else {
-            // Incorrect password
-            $error_message = 'Invalid email or password';
-        }
     } else {
-        // Email not found
-        $error_message = 'Invalid email or password';
+      // Incorrect password
+      $error_message = 'Invalid email or password';
     }
+  } else {
+    // Email not found
+    $error_message = 'Invalid email or password';
+  }
 
-    $conn->close();
+  $conn->close();
 }
 ?>
 <!doctype html>
