@@ -2,11 +2,21 @@
 
 session_start();
 
-include "../config/connection.php";
+$emplid = $_SESSION['emplid'];
 
+include "../config/connection.php";
 $sql = "SELECT * FROM employees WHERE role='emp'";
 
+
+$sql2 = "SELECT employees.username, requests.status
+FROM employees
+JOIN requests ON employees.id = requests.empid
+WHERE requests.emplid = '$emplid';
+";
+
+
 $result = mysqli_query($conn, $sql);
+$result2 = mysqli_query($conn, $sql2);
 
 // echo $_SESSION['username'];
 
@@ -76,7 +86,7 @@ $result = mysqli_query($conn, $sql);
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['username']?></span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['username'] ?></span>
                                 <img class="img-profile rounded-circle"
                                     src="img/undraw_profile.svg">
                             </a>
@@ -124,7 +134,7 @@ $result = mysqli_query($conn, $sql);
                                     <thead>
                                         <tr>
                                             <th>Employee Name</th>
-                                            <th>Status</th>
+                                            
                                             <th>Action</th>
                                             
                                         </tr>
@@ -136,14 +146,14 @@ $result = mysqli_query($conn, $sql);
                                     <?php
                                     foreach ($result as $r) {
                                         ?>
-                                                                            <tr>
+                                                                                                <tr>
                                                     
-                                                                                <td><?php echo $r['username'] ?></td>
-                                                                                <td><?php echo $r['status'] ?></td>
-                                                                                <td> <button class="btn btn-success"><a href="accept.php?id=<?php echo $r['id']; ?>"style="text-decoration: none;">Request</a></button></td>
+                                                                                                    <td><?php echo $r['username'] ?></td>
+                                                                                       
+                                                                                                    <td> <button class="btn btn-success"><a href="accept.php?id=<?php echo $r['id']; ?>"style="text-decoration: none;">Request</a></button></td>
                                             
-                                                                            </tr>
-                                                                            <?php
+                                                                                                </tr>
+                                                                                                <?php
                                     }
                                     ?>
                                         
@@ -154,6 +164,51 @@ $result = mysqli_query($conn, $sql);
                     </div>
 
                 </div>
+
+                <div class="container-fluid">
+
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">Company Status</h1>
+
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Employee Name</th>
+                        <th>Status</th>
+                      
+                        
+                    </tr>
+                </thead>
+                <tfoot>
+                   
+                </tfoot>
+                <tbody>
+                <?php
+                foreach ($result2 as $r) {
+                    ?>
+                                                                            <tr>
+                                
+                                                                                <td><?php echo $r['username'] ?></td>
+                                                                                <td><?php echo $r['status'] ?></td>
+                                                                    
+                                                                            </tr>
+                                                                            <?php
+                }
+                ?>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</div>
                 <!-- /.container-fluid -->
 
             </div>

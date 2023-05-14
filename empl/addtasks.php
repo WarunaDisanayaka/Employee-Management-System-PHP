@@ -3,11 +3,13 @@ include "../config/connection.php";
 
 session_start();
 
-if (isset($_POST['task'])) {
+if (isset($_POST['add'])) {
     echo $task = $_POST['task'];
     echo $emp = $_POST['emp'];
-    $status = "In progress";
-    $sql = "INSERT INTO tasks(empid,task,status)VALUES(?,?,?)";
+    $companyid = $_SESSION['emplid'];
+    $date = $_POST['date'];
+    $status = "Pending";
+    $sql = "INSERT INTO tasks(empid,companyid,date,task,status)VALUES(?,?,?,?,?)";
     // Prepare the SQL statement
     $stmt = $conn->prepare($sql);
 
@@ -17,7 +19,7 @@ if (isset($_POST['task'])) {
         die('Database error: ' . mysqli_error($conn));
     }
 
-    mysqli_stmt_bind_param($stmt, 'dss', $emp, $task, $status);
+    mysqli_stmt_bind_param($stmt, 'ddsss', $emp, $companyid, $date, $task, $status);
 
     // Execute the SQL statement
     if ($stmt->execute()) {

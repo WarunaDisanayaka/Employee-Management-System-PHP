@@ -3,7 +3,13 @@ session_start();
 
 include "../config/connection.php";
 
-$sql = "SELECT * FROM employees WHERE role='emp' AND status='Accepted'";
+$emplid = $_SESSION['emplid'];
+
+$sql = "SELECT employees.id, employees.email, employees.username, requests.emplid, requests.company, requests.status
+FROM employees
+JOIN requests ON employees.id = requests.empid
+WHERE requests.status = 'Accepted' AND emplid='$emplid';
+";
 
 $result = mysqli_query($conn, $sql);
 
@@ -35,7 +41,7 @@ $result = mysqli_query($conn, $sql);
          <!-- Side bar -->
          <?php
          include 'sidebar.php'
-             ?>
+            ?>
          <!-- End side bar -->
          <!-- Content Wrapper -->
          <div id="content-wrapper" class="d-flex flex-column">
@@ -83,7 +89,7 @@ $result = mysqli_query($conn, $sql);
                      <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['username']?></span>
+                        <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['username'] ?></span>
                         <img class="img-profile rounded-circle"
                            src="img/undraw_profile.svg">
                         </a>
@@ -124,18 +130,22 @@ $result = mysqli_query($conn, $sql);
                            <select name="emp" class="form-control">
                               <?php
                               foreach ($result as $r) {
-                                  ?>
-                                              <option value="<?php echo $r['id'] ?>"><?php echo $r['username'] ?></option>
-                                              <?php
+                                 ?>
+                                                          <option value="<?php echo $r['id'] ?>"><?php echo $r['username'] ?></option>
+                                                          <?php
                               }
                               ?>
                            </select>
                         </div>
                         <div class="form-group">
+      <label for="exampleFormControlInput1">Select Date</label>
+      <input type="date" name="date" class="form-control" id="exampleFormControlInput1">
+   </div>
+                        <div class="form-group">
                            <label for="exampleFormControlTextarea1">Enter task</label>
                            <textarea class="form-control" name="task" id="exampleFormControlTextarea1" rows="3"></textarea>
                         </div>
-                        <button type="submit" name="task" class="btn btn-primary">Add</button>
+                        <button type="submit" name="add" class="btn btn-primary">Add</button>
                      </form>
                   </div>
                </div>

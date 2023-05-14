@@ -4,7 +4,14 @@ session_start();
 
 include "../config/connection.php";
 
-$sql = "SELECT * FROM employees WHERE role='emp'";
+$empid = $_SESSION['empid'];
+
+$sql = "SELECT employees.id, employees.email, employees.username, requests.id, requests.emplid, requests.company, requests.status
+FROM employees
+JOIN requests ON employees.id = requests.empid
+WHERE employees.id = '$empid'";
+
+
 
 $result = mysqli_query($conn, $sql);
 
@@ -76,7 +83,7 @@ $result = mysqli_query($conn, $sql);
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['username']?></span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['username'] ?></span>
                                 <img class="img-profile rounded-circle"
                                     src="img/undraw_profile.svg">
                             </a>
@@ -123,7 +130,7 @@ $result = mysqli_query($conn, $sql);
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Employeer Name</th>
+                                            <th>Company Name</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                             
@@ -136,13 +143,13 @@ $result = mysqli_query($conn, $sql);
                                     <?php
                                     foreach ($result as $r) {
                                         ?>
-                                                    <tr>
-                                                        <td><?php echo $r['emplname'] ?></td>
-                                                        <td><?php echo $r['status'] ?></td>
-                                                        <td><button class="btn btn-success"><a href="accept.php?id=<?php echo $r['id']; ?>"style="text-decoration: none;">Accept</a></button></td>
+                                                                    <tr>
+                                                                        <td><?php echo $r['company'] ?></td>
+                                                                        <td><?php echo $r['status'] ?></td>
+                                                                        <td><button class="btn btn-success"><a href="accept.php?id=<?php echo $r['id']; ?>"style="text-decoration: none;">Accept</a></button></td>
                                             
-                                                    </tr>
-                                                    <?php
+                                                                    </tr>
+                                                                    <?php
                                     }
                                     ?>
                                         

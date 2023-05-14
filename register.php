@@ -8,11 +8,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $email = $_POST['email'];
   $password = $_POST['password'];
   $cpassword = $_POST['cpassword'];
-  $role = "emp";
+  $role = "empl";
+  $company = $_POST["company"];
+  $status = "Inactive";
 
   $nameerr = "";
   $emailerr = "";
   $passworderr = "";
+  $companyerr = "";
 
   // Initialize an array to store error messages
   $errors = array();
@@ -20,6 +23,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Validate Name
   if (empty($name)) {
     $nameerr = "Name is required.";
+  }
+
+  // Validate Name
+  if (empty($company)) {
+    $companyerr = "Company name is required.";
   }
 
   // Validate Email
@@ -50,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Check if there are any errors
   if (empty($nameerr) && empty($emailerr) && empty($passworderr)) {
 
-    $sql = "INSERT INTO employees(email,username,password,role)VALUES(?,?,?,?)";
+    $sql = "INSERT INTO company(email,username,company,password,role,status)VALUES(?,?,?,?,?,?)";
 
     $stmt = mysqli_prepare($conn, $sql);
 
@@ -58,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       die('Database error: ' . mysqli_error($conn));
     }
 
-    mysqli_stmt_bind_param($stmt, 'ssss', $email, $name, $hashed_password, $role);
+    mysqli_stmt_bind_param($stmt, 'ssssss', $email, $name, $company, $hashed_password, $role, $status);
 
     // Execute insert query
     if (mysqli_stmt_execute($stmt)) {
@@ -102,9 +110,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="col-12 col-md-9 col-lg-7 col-xl-6">
           <div class="card" style="border-radius: 15px;">
             <div class="card-body p-5">
-              <h2 class="text-uppercase text-center mb-5">Create an account</h2>
+              <h2 class="text-uppercase text-center mb-5">Create a Company account</h2>
               
               <form action="register.php" method="POST">
+
+              <div class="form-outline mb-4">
+                <label class="form-label" for="form3Example1cg">Company Name</label>
+                  <input type="text" id="form3Example1cg" name="company" class="form-control form-control-lg" />
+                  <span class="error"><?php echo $companyerr; ?></span>
+                </div>
                 <div class="form-outline mb-4">
                 <label class="form-label" for="form3Example1cg">Your Name</label>
                   <input type="text" id="form3Example1cg" name="name" class="form-control form-control-lg" />
@@ -134,8 +148,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Register</button>
                 </div>
 
+                <p class="text-center text-muted mt-5 mb-0">Register as Employee <a href="empregister.php"
+                    class="fw-bold text-body"><u>Register here</u></a></p>    
+
                 <p class="text-center text-muted mt-5 mb-0">Have already an account? <a href="index.php"
                     class="fw-bold text-body"><u>Login here</u></a></p>
+               
               </form>
 
             </div>

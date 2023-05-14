@@ -30,5 +30,12 @@
         <span>Tasks</span></a>
 </li>
 
+<!-- Nav Item - Tables -->
+<li class="nav-item">
+    <a class="nav-link" href="points.php">
+    <i class="fas fa-star"></i>
+        <span>Points</span></a>
+</li>
+
 </ul>
 <!-- End of Sidebar -->

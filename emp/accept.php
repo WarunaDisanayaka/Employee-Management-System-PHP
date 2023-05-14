@@ -6,7 +6,7 @@ session_start();
 if (isset($_GET['id'])) {
     $empid = $_GET['id'];
     // $emplname = $_SESSION['username'];
-    $sql = "UPDATE employees SET status='Accepted' WHERE id = ?";
+    $sql = "UPDATE requests SET status='Accepted' WHERE id = ?";
     // Prepare the SQL statement
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $empid);

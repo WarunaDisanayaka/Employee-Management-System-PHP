@@ -3,10 +3,15 @@ session_start();
 
 include "../config/connection.php";
 
-$sql = "SELECT tasks.id, tasks.empid, tasks.task, tasks.status, employees.email, employees.username
+$emplid = $_SESSION['emplid'];
+
+$sql = "SELECT tasks.id, tasks.empid, tasks.task, tasks.status, company.email, employees.username
    FROM tasks
-   JOIN employees ON tasks.empid = employees.id;
-   ";
+   JOIN company ON tasks.companyid = company.id
+   JOIN employees ON employees.id = tasks.empid
+   WHERE tasks.companyid = '$emplid'";
+
+
 
 $result = mysqli_query($conn, $sql);
 
@@ -38,7 +43,7 @@ $result = mysqli_query($conn, $sql);
          <!-- Side bar -->
          <?php
          include 'sidebar.php'
-             ?>
+            ?>
          <!-- End side bar -->
          <!-- Content Wrapper -->
          <div id="content-wrapper" class="d-flex flex-column">
@@ -59,7 +64,7 @@ $result = mysqli_query($conn, $sql);
                      <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['username']?></span>
+                        <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['username'] ?></span>
                         <img class="img-profile rounded-circle"
                            src="img/undraw_profile.svg">
                         </a>
@@ -110,29 +115,29 @@ $result = mysqli_query($conn, $sql);
                               <tbody>
                                  <?php
                                  foreach ($result as $r) {
-                                     ?>
-                                                     <tr>
-                                                        <td><?php echo $r['username'] ?></td>
-                                                        <td><?php echo $r['task'] ?></td>
-                                                        <td> <?php echo $r['status'] ?></td>
-                                                        <form action="action.php" method="POST">
-                                                        <input type="hidden" name="id" value="<?php echo $r['id']; ?>">
-                                                        <td>
-                                                           <select name="action" class="form-select" aria-label="Default select example">
-                                                              <option selected>Open this select menu</option>
-                                                              <option value="Pending">Pending</option>
-                                                              <option value="Processing">Processing</option>
-                                                              <option value="Completed">Completed</option>
-                                                              <option value="To be reviewed">To be reviewed</option>
+                                    ?>
+                                                                 <tr>
+                                                                    <td><?php echo $r['username'] ?></td>
+                                                                    <td><?php echo $r['task'] ?></td>
+                                                                    <td> <?php echo $r['status'] ?></td>
+                                                                    <form action="action.php" method="POST">
+                                                                    <input type="hidden" name="id" value="<?php echo $r['id']; ?>">
+                                                                    <td>
+                                                                       <select name="action" class="form-select" aria-label="Default select example">
+                                                                          <option selected>Open this select menu</option>
+                                                                          <option value="Pending">Pending</option>
+                                                                          <option value="Processing">Processing</option>
+                                                                          <option value="Completed">Completed</option>
+                                                                          <option value="To be reviewed">To be reviewed</option>
                                                     
-                                                           </select>
-                                                           <div>
-                                                              <button type="submit" name="status" class="btn btn-primary">Submit</button>
-                                                           </div>
-                                                        </td>
-                                                        </form>
-                                                     </tr>
-                                                     <?php
+                                                                       </select>
+                                                                       <div>
+                                                                          <button type="submit" name="status" class="btn btn-primary">Submit</button>
+                                                                       </div>
+                                                                    </td>
+                                                                    </form>
+                                                                 </tr>
+                                                                 <?php
                                  }
                                  ?>
                               </tbody>

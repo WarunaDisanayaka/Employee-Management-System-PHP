@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $email = $_POST['email'];
   $password = $_POST['password'];
 
-  // Check if the email exists in the database
+  // Check if the email exists in the employees table
   $sql = "SELECT * FROM employees WHERE email = '$email'";
   $result = $conn->query($sql);
 
@@ -20,34 +20,65 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (password_verify($password, $row['password'])) {
       // Login successful
       $_SESSION['email'] = $row['email'];
-      $_SESSION['userid'] = $row['id'];
+      $_SESSION['empid'] = $row['id'];
       $_SESSION['username'] = $row['username'];
+      $_SESSION['company'] = $row['company'];
 
-      // Redirect to index page after successful login
-      // Redirect to index page after successful login
+      // Redirect based on role
       if ($row['role'] == 'emp') {
         header('Location: emp/');
       } else if ($row['role'] == 'empl') {
         header('Location: empl/');
+      } else if ($row['role'] == 'admin') {
+        header('Location: admin/');
       } else {
         // Redirect back
         header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit;
-
       }
       exit;
-
     } else {
       // Incorrect password
       $error_message = 'Invalid email or password';
     }
   } else {
-    // Email not found
-    $error_message = 'Invalid email or password';
+    // Email not found in employees table, check in company table
+    $sql = "SELECT * FROM company WHERE email = '$email' AND status='Active'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows == 1) {
+      $row = $result->fetch_assoc();
+      if (password_verify($password, $row['password'])) {
+        // Login successful
+        $_SESSION['email'] = $row['email'];
+        $_SESSION['emplid'] = $row['id'];
+        $_SESSION['username'] = $row['username'];
+        $_SESSION['company'] = $row['company'];
+
+        // Redirect based on role (assuming company has a role column)
+        if ($row['role'] == 'empl') {
+          header('Location: empl/');
+        } else if ($row['role'] == 'admin') {
+          header('Location: admin/');
+        } else {
+          // Redirect back
+          header('Location: ' . $_SERVER['HTTP_REFERER']);
+          exit;
+        }
+        exit;
+      } else {
+        // Incorrect password
+        $error_message = 'Your account is not activated';
+      }
+    } else {
+      // Email not found in employees or company table
+      $error_message = 'Invalid email or password';
+    }
   }
 
   $conn->close();
 }
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -92,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
 
                 <p class="text-center text-muted mt-5 mb-0">Haven't an account? <a href="register.php"
-                    class="fw-bold text-body"><u>Register here</u></a></p>
+                    class="fw-bold text-body"><u>Register here</u></a></p>    
               </form>
 
             </div>

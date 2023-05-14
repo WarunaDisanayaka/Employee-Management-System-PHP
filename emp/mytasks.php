@@ -3,27 +3,29 @@ session_start();
 
 include "../config/connection.php";
 
+$empid = $_SESSION['empid'];
+
 // Pending tasks
-$pending = "SELECT tasks.id, tasks.empid, tasks.task, tasks.status, employees.email, employees.username
-   FROM tasks JOIN employees ON tasks.empid = employees.id WHERE tasks.status='Pending';";
+$pending = "SELECT tasks.id, tasks.empid, tasks.task, tasks.date,tasks.status, employees.email, employees.username
+   FROM tasks JOIN employees ON tasks.empid = employees.id WHERE tasks.status='Pending' AND tasks.empid = $empid;";
 
 $resultpending = mysqli_query($conn, $pending);
 
 // Processing tasks
-$processing = "SELECT tasks.id, tasks.empid, tasks.task, tasks.status, employees.email, employees.username
-   FROM tasks JOIN employees ON tasks.empid = employees.id WHERE tasks.status='Processing';";
+$processing = "SELECT tasks.id, tasks.empid, tasks.task,tasks.date, tasks.status, employees.email, employees.username
+   FROM tasks JOIN employees ON tasks.empid = employees.id WHERE tasks.status='Processing' AND tasks.empid = $empid;";
 
 $resultprocessing = mysqli_query($conn, $processing);
 
 // Completed tasks
-$completed = "SELECT tasks.id, tasks.empid, tasks.task, tasks.status, employees.email, employees.username
-   FROM tasks JOIN employees ON tasks.empid = employees.id WHERE tasks.status='Completed';";
+$completed = "SELECT tasks.id, tasks.empid, tasks.task, tasks.date,tasks.status, employees.email, employees.username
+   FROM tasks JOIN employees ON tasks.empid = employees.id WHERE tasks.status='Completed' AND tasks.empid = $empid;";
 
 $resultcompleted = mysqli_query($conn, $completed);
 
 // Reviewed tasks
-$reviewed = "SELECT tasks.id, tasks.empid, tasks.task, tasks.status, employees.email, employees.username
-   FROM tasks JOIN employees ON tasks.empid = employees.id WHERE tasks.status='To be reviewed';";
+$reviewed = "SELECT tasks.id, tasks.empid, tasks.task,tasks.date, tasks.status, employees.email, employees.username
+   FROM tasks JOIN employees ON tasks.empid = employees.id WHERE tasks.status='To be reviewed' AND tasks.empid = $empid;";
 
 $resultreviewed = mysqli_query($conn, $reviewed);
 
@@ -38,7 +40,7 @@ $resultreviewed = mysqli_query($conn, $reviewed);
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <meta name="description" content="">
       <meta name="author" content="">
-      <title>SB Admin 2 - Tables</title>
+      <title>My Tasks</title>
       <!-- Custom fonts for this template -->
       <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
       <link
@@ -127,15 +129,15 @@ $resultreviewed = mysqli_query($conn, $reviewed);
                                <?php
                                foreach ($resultpending as $r) {
                                   ?>
-                                                            <div class="card">
-                                                               <div class="card-body">
-                                                                  <h5 class="card-title"><?php echo $r['task'] ?></h5>
-                                                                  <p class="card-text">Task description goes here.</p>
-                                                                  <p class="card-text">Status: <?php echo $r['status'] ?></p>
-                                                                  <a href="processing.php?id=<?php echo $r['id'] ?>" class="btn btn-primary">Set Processing</a>
-                                                               </div>
-                                                            </div>
-                                                            <?php
+                                                                     <div class="card mt-3">
+                                                                        <div class="card-body">
+                                                                           <h5 class="card-title"><?php echo $r['task'] ?></h5>
+                                                                        
+                                                                           <p class="card-text">Date: <?php echo $r['date'] ?></p>
+                                                                           <a href="processing.php?id=<?php echo $r['id'] ?>" class="btn btn-primary">Set Processing</a>
+                                                                        </div>
+                                                                     </div>
+                                                                     <?php
                                }
                                ?>
                             </div>
@@ -145,15 +147,15 @@ $resultreviewed = mysqli_query($conn, $reviewed);
                            <?php
                            foreach ($resultprocessing as $r) {
                               ?>
-                                                            <div class="card">
-                                                               <div class="card-body">
-                                                                  <h5 class="card-title"><?php echo $r['task'] ?></h5>
-                                                                  <p class="card-text">Task description goes here.</p>
-                                                                  <p class="card-text">Status: <?php echo $r['status'] ?></p>
-                                                                  <a href="completed.php?id=<?php echo $r['id'] ?>" class="btn btn-primary">Set Completed</a>
-                                                               </div>
-                                                            </div>
-                                                            <?php
+                                                                     <div class="card mt-3">
+                                                                        <div class="card-body">
+                                                                           <h5 class="card-title"><?php echo $r['task'] ?></h5>
+                                                                        
+                                                                           <p class="card-text">Date: <?php echo $r['date'] ?></p>
+                                                                           <a href="completed.php?id=<?php echo $r['id'] ?>" class="btn btn-primary">Set Completed</a>
+                                                                        </div>
+                                                                     </div>
+                                                                     <?php
                            }
                            ?>
                         </div>
@@ -162,15 +164,15 @@ $resultreviewed = mysqli_query($conn, $reviewed);
                            <?php
                            foreach ($resultcompleted as $r) {
                               ?>
-                                                            <div class="card">
-                                                               <div class="card-body">
-                                                                  <h5 class="card-title"><?php echo $r['task'] ?></h5>
-                                                                  <p class="card-text">Task description goes here.</p>
-                                                                  <p class="card-text">Status: <?php echo $r['status'] ?></p>
-                                                                  <a href="processing.php?id=<?php echo $r['id'] ?>" class="btn btn-primary">Set Processing</a>
-                                                               </div>
-                                                            </div>
-                                                            <?php
+                                                                     <div class="card mt-3">
+                                                                        <div class="card-body">
+                                                                           <h5 class="card-title"><?php echo $r['task'] ?></h5>
+                                                                       
+                                                                           <p class="card-text">Status: <?php echo $r['status'] ?></p>
+                                                                           <a href="processing.php?id=<?php echo $r['id'] ?>" class="btn btn-primary">Set Processing</a>
+                                                                        </div>
+                                                                     </div>
+                                                                     <?php
                            }
                            ?>
                         </div>
@@ -179,15 +181,15 @@ $resultreviewed = mysqli_query($conn, $reviewed);
                            <?php
                            foreach ($resultreviewed as $r) {
                               ?>
-                                                            <div class="card">
-                                                               <div class="card-body">
-                                                                  <h5 class="card-title"><?php echo $r['task'] ?></h5>
-                                                                  <p class="card-text">Task description goes here.</p>
-                                                                  <p class="card-text">Status: <?php echo $r['status'] ?></p>
-                                                                  <a href="processing.php?id=<?php echo $r['id'] ?>" class="btn btn-primary">Set Processing</a>
-                                                               </div>
-                                                            </div>
-                                                            <?php
+                                                                     <div class="card mt-3">
+                                                                        <div class="card-body">
+                                                                           <h5 class="card-title"><?php echo $r['task'] ?></h5>
+                                                                        
+                                                                           <p class="card-text">Status: <?php echo $r['status'] ?></p>
+                                                                           <a href="processing.php?id=<?php echo $r['id'] ?>" class="btn btn-primary">Set Processing</a>
+                                                                        </div>
+                                                                     </div>
+                                                                     <?php
                            }
                            ?>
                         </div>

@@ -5,7 +5,7 @@ session_start();
 
 if (isset($_GET['id'])) {
     $task = $_GET['id'];
-    $sql = "UPDATE tasks SET status='Completed' WHERE id = ?";
+    $sql = "UPDATE tasks SET status='Completed', points=+1 WHERE id = ?";
     // Prepare the SQL statement
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $task);
