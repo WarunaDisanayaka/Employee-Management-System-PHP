@@ -1,6 +1,21 @@
 <?php
+include "../config/connection.php";
 
 session_start();
+
+$sql = "SELECT SUM(amount) AS total_amount FROM salary";
+$result = mysqli_query($conn, $sql);
+
+if ($result) {
+    $row = mysqli_fetch_assoc($result);
+    $totalAmount = $row['total_amount'];
+} else {
+    $totalAmount = 0;
+}
+
+mysqli_free_result($result);
+mysqli_close($conn);
+
 
 if (!isset($_SESSION['email'])) {
     // Redirect to the login page
@@ -149,8 +164,8 @@ if (!isset($_SESSION['email'])) {
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Earnings (Monthly)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                                Paid salary</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $totalAmount; ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
