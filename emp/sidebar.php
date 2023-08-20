@@ -23,5 +23,17 @@
         <span>Tasks</span></a>
 </li>
 
+<li class="nav-item">
+    <a class="nav-link" href="salary.php">
+    <i class="fas fa-money-bill-wave"></i>
+        <span>Salary</span></a>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link" href="attendance.php">
+    <i class="fas fa-calendar-check"></i>
+        <span>Attendance</span></a>
+</li>
+
 </ul>
 <!-- End of Sidebar -->

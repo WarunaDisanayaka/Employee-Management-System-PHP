@@ -37,5 +37,17 @@
         <span>Points</span></a>
 </li>
 
+<li class="nav-item">
+    <a class="nav-link" href="salary.php">
+    <i class="fas fa-money-check"></i>
+        <span>Salary paying</span></a>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link" href="empsalaries.php">
+    <i class="fas fa-money-bill-wave"></i>
+        <span>Employee salaries</span></a>
+</li>
+
 </ul>
 <!-- End of Sidebar -->
